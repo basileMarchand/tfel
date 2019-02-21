@@ -1597,6 +1597,19 @@ namespace mfront
 	      "$(shell "+tfel_config+" --library-dependency "
 	      "--material --mfront-profiling --physical-constants)");
 #endif /* __cplusplus < 201703L */
+
+    //    insert_if(d.specific_targets["install"], "$(shell cp "+ name + "$(ZEBU_PATH)" );
+  
+
+    // Add a specific_target to install the builded library in the ZEBU_PATH, in order to allow direct usage by Z-set. 
+    d.specific_targets["install"] = std::pair<std::vector<std::string> , std::vector<std::string> >( 
+      {d[lib].prefix + d[lib].name + "." + d[lib].suffix},
+      {"@cp $^  $(ZEBU_PATH)"}
+      );
+
+    // Add the install target in the all target
+    d.specific_targets["all"].first.push_back( "install" );
+
   } // end of ZMATInterface::getTargetsDescription
 
   ZMATInterface::~ZMATInterface() = default;
